@@ -52,7 +52,7 @@ public class MemberDAO {
 
      // 208 페이지 추가  UUID 찾기
     public MemberVO selectUUID(String uuid) throws Exception{
-        String query = "selcet mid, mpw, mname, uuid from tbl_member where uuid = ?";
+        String query = "select mid, mpw, mname, uuid from tbl_member where uuid = ?";
 
         @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(query);

@@ -7,6 +7,9 @@
 <body>
 <h1>Todo List</h1>
 
+<%-- Listener 내용 추가 ( P216)--%>
+<h2>${appName}</h2>
+
 <%-- loginController에서 loginInfo라는 값을 /todo/list로 전달함 --%>
 <h2>${loginInfo}</h2>
 <h2>${loginInfo.mname}</h2>

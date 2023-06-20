@@ -10,6 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+
 @Log4j2
 // JUnit5 버전에서 'spring-test'를 이용하기 위한 설정
 // JUnit4 버전에서는 @Runwith 사용
@@ -22,6 +25,10 @@ public class SampleTests {
     // 스프링에서 사용하는 의존성 주입 관련 어노테이션으로 만일 해당 타입의 빈이 존재하면 여기에 주입해 주길 원한다는 어노테이션
     @Autowired
     private SampleService sampleService;
+
+    // root-context.xml에 선언된 HikariCP를 주입 받기 위해 DataSource 타입 변수 선언 및 객체 주입
+    @Autowired
+    private DataSource dataSource;
 
     @Test
     public void testService1(){
@@ -39,4 +46,24 @@ public class SampleTests {
     // 테스트 실패시 (Service를 root에 주입하지 않았을 시)
     // SampleService 타입의 객체를 주입하려고 하지만 해당 타입의 객체가 스프링 내에 등록된 것이 없다는 메시지가 출력됨
     // org.springframework.beans.factory.UnsatisfiedDependencyException : Error creating bean with name 'org.zerock.springex.sample.SampleService
+    
+    // INFO [org.zerock.springex.sample.SampleTests] SampleService(sampleDAO=org.zerock.springex.sample.SampleDAO@7a5b769b)
+    // SampleService에 SampleDAO 객체가 주입됨
+
+    
+    // HikariDataSource는 javax.sql의 DataSource 인터페이스 구현체이므로 test 코드를 통해 설정 확인 
+    @Test
+    public void testConnection() throws Exception{
+        Connection connection = dataSource.getConnection();
+        log.info(connection);
+        Assertions.assertNotNull(connection);
+
+        connection.close();
+    }
+
+    // 테스트 성공 결과
+    // 01:25:36  INFO [org.zerock.springex.sample.SampleTests] HikariProxyConnection@855277727 wrapping com.mysql.cj.jdbc.ConnectionImpl@54067fdc
+    // 스프링은 필요한 객체를 스프링에서 주입해 개별적으로 클래스를 작성해 빈으로 등록해두면됨(원하는 곳에서 쉽게 다른 객체 사용 가능)
+
+
 }

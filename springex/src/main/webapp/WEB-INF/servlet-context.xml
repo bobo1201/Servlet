@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- MVC 설정을 어노테이션 기반으로 처리한다는 의미,
+    스프링 MVC 여러 객체들을 자동으로 스프링 빈으로 등록하게 하는 기능 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 이미지나 HTML 파일과 같이 정적인 파일의 경로 지정
+    /resources 경로 들어오는 요청은 정적 파일을 요구하는 것이라고 생각하고 스프링 MVC에서 처리하지 않음
+    location 속성은 webapp 폴더에 만들어둔 폴더
+    예제에서 resources와 같은폴더나 경로를 이용하는 이유는 이클립스를 이용해 생성하는 프로젝트와 구조를 동일하게 함
+    경로나 폴더는 임의로 변경이 가능합니다. -->
+    <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+
+    <!-- InternalResourceViewResolver(스프링 MVC에서 제공하는 뷰를 어떻게 결정하는지에 대한 설정 담당)
+    라는 이름의 클래스로 빈 설정됨 prefix, suffix 내용을 보면 MVC에서 사용했던 WEB-INF 경로와 '.jsp'라는
+    확장자를 지정한 것을 볼 수 있음. '/WEB-INF/...jsp'와 같은 설정 생략 가능 -->
+    <!-- prefix : JSP 파일이 위치하는 디렉토리 경로 지정, suffix : jsp 파일의 확장자 지정(대부분 .jsp)  -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!-- Controller 어노테이션 사용을 위한 빈 추가 -->
+    <context:component-scan base-package="org.zerock.springex.controller" />
+
+    <!-- Formatter를 적용하기 위해 필요한 과정 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="org.zerock.springex.controller.formatter.LocalDateFormatter" />
+            </set>
+        </property>
+    </bean>
+
+    <!-- conversionService라는 빈을 등록한 후에 스프링 MVC 처리할 때  <mvc:annotation-driven> 지정해야함 -->
+    <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+</beans>

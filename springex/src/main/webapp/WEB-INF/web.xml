@@ -3,4 +3,49 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <!-- WEB-INF 폴더 아래 web.xml에 listener 설정과 필요한 context-param 추가 -->
+    <!-- 설정 추가된 후 톰캣 실행하면 스프링과 관련된 로그가 기록되면서 실행되는 것을 확인할 수 있음 -->
+
+    <!--    01:07:27  INFO [org.springframework.web.context.ContextLoader] Root WebApplicationContext: initialization started-->
+    <!--    01:07:28  INFO [org.springframework.web.context.ContextLoader] Root WebApplicationContext initialized in 643 ms-->
+
+    <context-param>
+        <!-- contextConfigLocation은 애플리케이션의 루트 컨텍스트 설정 파일 위치 지정 매개변수 -->
+        <param-name>contextConfigLocation</param-name>
+        <!-- /WEB-INF/root-context.xml은 실제 파일 경로를 값으로 지정
+         애플리케이션 전반에 걸쳐 공유되는 빈(Bean) 정의, 데이터베이스 연결 설정, 트랜잭션 관리 -->
+        <param-value>/WEB-INF/root-context.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <!-- 웹 애플리케이션의 라이프사이클 이벤트를 처리하는 리스너 클래스
+        ContextLoaderListener는 애플리케이션 시작시 루트 컨텍스트를 초기화하고 Spring-Framework에서 제공하는 기능 제공 -->
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- contextConfigLocation 매개변수를 통해 'root-context.xml' 파일의 위치를 지정하고
+      contextConfigLocation를 통해 해당 설정 파일을 로드해 Spring 컨테이너를 초기화 -->
+
+
+    <!-- DispatcherServlet이 로딩할 때 servlet-context.xml을 이용함
+     load-on-startup 설정의 경우 톰캣 로딩 시에 클래스를 미리 로딩해 두기 위한 설정-->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- servlet에서 appServlet 이름을 사용하기 위해서는 매핑을 해야함
+    DispatcherServlet이 모든 경로의 요청에 대한 처리를 '/'로 담당-->
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

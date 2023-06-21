@@ -28,12 +28,48 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
 
-    // 스프링 사용을 위한 의존성 주입
+    // 1. 스프링 사용을 위한 의존성 주입
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.26'
     implementation group: 'org.springframework', name: 'spring-context', version: '5.3.26'
     implementation group: 'org.springframework', name: 'spring-test', version: '5.3.26'
     // 스프링 프레임워크의 웹과 관련된 작업을 위한 라이브러리 추가 (242p)
     implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.26'
+
+    // MyBatis 이용을 위한 스프링 관련 내용 추가
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.26'
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.26'
+
+
+
+    // 2. 웹 애플리케이션 필수인 데이터베이스 관련 설정 추가
+    // MySQL과 HikariCP 라이브러리 추가
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+
+    // HikariCP 이용 (Connection 생성)
+    implementation group : 'com.zaxxer', name: 'HikariCP', version:'5.0.1'
+    // 이용하기 위해서 HikariConfig 타입의 객체 생성 필요
+    // HikariDataSource라는 객체를 생성
+    // getConnection()을 제공하므로 Connection 객체를 얻어서 사용할 수 있음
+
+    // MyBatis 관련 라이브러리 추가
+    implementation 'org.mybatis:mybatis:3.5.11'
+    implementation 'org.mybatis:mybatis-spring:2.1.0'
+
+
+
+    // 3. jstl 라이브러리 추가
+    implementation group: 'jstl', name: 'jstl', version: '1.2'
+
+
+
+    // 4. ModelMapper 라이브러리 추가 (DTO, VO의 변환)
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.0.0'
+
+
+    // 5. DTO 검증을 위한 Validate 관련 라이브러리
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.2.1.Final'
+
 
     // lombok 라이브러리 추가
     compileOnly 'org.projectlombok:lombok:1.18.24'
@@ -46,27 +82,6 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version:'2.17.2'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version:'2.17.2'
 
-    // jstl 라이브러리 추가
-    implementation group: 'jstl', name: 'jstl', version: '1.2'
-
-    // 웹 애플리케이션 필수인 데이터베이스 관련 설정 추가
-    // MySQL과 HikariCP 라이브러리 추가
-    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
-
-    // HikariCP 이용 (Connection 생성)
-    implementation group : 'com.zaxxer', name: 'HikariCP', version:'5.0.1'
-    // 이용하기 위해서 HikariConfig 타입의 객체 생성 필요
-    // HikariDataSource라는 객체를 생성
-    // getConnection()을 제공하므로 Connection 객체를 얻어서 사용할 수 있음
-
-    // MyBatis 이용을 위한 스프링 관련 내용 추가
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.26'
-    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.26'
-
-    // MyBatis 관련 라이브러리 추가
-    implementation 'org.mybatis:mybatis:3.5.11'
-    implementation 'org.mybatis:mybatis-spring:2.1.0'
 }
 
 test {

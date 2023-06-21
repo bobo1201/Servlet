@@ -20,6 +20,7 @@ public class TodoController {
 
 //    @RequestMapping(value = "/register", method = RequestMethod.GET)
     @GetMapping("/register")
+    // Mapping 경로와 같은 jsp가 있으면 리턴하지 않아도 해당 jsp를 호출할 수 있음
     public void registerGet(){
         log.info("GET todo register.....");
     }
@@ -30,5 +31,4 @@ public class TodoController {
 
         log.info(todoDTO);
     }
-
 }

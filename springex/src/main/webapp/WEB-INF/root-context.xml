@@ -17,6 +17,7 @@
 
     <!-- bean을 이용해 config bean으로 등록  -->
     <context:component-scan base-package="org.zerock.springex.config" />
+    <context:component-scan base-package="org.zerock.springex.service" />
 
 
     <!-- 스프링 빈으로 MySQL과 연결이 되어야함 -->

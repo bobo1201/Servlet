@@ -11,6 +11,10 @@
     <insert id="insert">
         insert into tbl_todo (title, dueDate, writer) values ( #{title}, #{dueDate}, #{writer} )
     </insert>
+
+    <select id="selectAll" resultType="org.zerock.springex.domain.TodoVO">
+        select * from tbl_todo order by tno desc
+    </select>
 </mapper>
 
 <!--307page-->

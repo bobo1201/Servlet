@@ -1,5 +1,8 @@
 package org.zerock.springex.service;
 
+import org.zerock.springex.domain.TodoVO;
+import org.zerock.springex.dto.PageRequestDTO;
+import org.zerock.springex.dto.PageResponseDTO;
 import org.zerock.springex.dto.TodoDTO;
 
 import java.util.List;
@@ -10,7 +13,16 @@ public interface TodoService {
     // 여러 개의 파라미터 대신 TodoDTO로 묶어서 전달 받음
     void register(TodoDTO todoDTO);
 
-    List<TodoDTO> getAll();
+//    List<TodoDTO> getAll();
+    PageResponseDTO<TodoDTO> getList(PageRequestDTO pageRequestDTO);
+
+    TodoDTO getOne(Long tno);
+
+    void remove(Long tno);
+
+    void modify(TodoDTO todoDTO);
+
+
 }
 
 // 308p까지 완료

@@ -51,13 +51,15 @@
                 <th scope="col">Title</th>
                 <th scope="col">Writer</th>
                 <th scope="col">DueDate</th>
+                <th scope="col">Finished</th>
               </tr>
               </thead>
               <tbody>
-              <c:forEach items="${dtoList}" var="dto">
+              <c:forEach items="${responseDTO.dtoList}" var="dto">
                 <tr>
                   <th scope="row"><c:out value="${dto.tno}" /></th>
-                  <td><c:out value="${dto.title}" /> </td>
+                  <td><a href="/todo/read?tno=${dto.tno}" class="text-decoration-none">
+                    <c:out value="${dto.title}" /></a> </td>
                   <td><c:out value="${dto.writer}" /> </td>
                   <td><c:out value="${dto.dueDate}" /> </td>
                   <td><c:out value="${dto.finished}" /> </td>
@@ -65,13 +67,51 @@
               </c:forEach>
               </tbody>
             </table>
+
+            <%-- 페이지네이션(부트스트랩) 이용 --%>
+            <div class="float-end">
+              <ul class="pagination flex-wrap">
+                <c:if test="${responseDTO.prev}">
+                  <li class="page-item">
+                      <%-- ul태그에 이벤트 처리할 것, data- 속성을 이용해 필요한 속성 추가
+                       data-num이라는 속성 추가해 페이지 번호 보관 --%>
+                    <a class="page-link" data-num="${responseDTO.start-1}">Previous</a>
+                  </li>
+                </c:if>
+
+                <%-- 첫번째 페이지일때 Previous를 출력안함 --%>
+                <c:forEach begin="${responseDTO.start}" end="${responseDTO.end}" var="num">
+                  <li class="page-item" ${responseDTO.page == num? "active":""}><a class="page-link" href="#">${num}</a></li>
+                </c:forEach>
+
+                <c:if test="${responseDTO.next}">
+                  <li class="page-item">
+                    <a class="page-link" data-num="${responseDTO.end + 1}">Next</a>
+                  </li>
+                </c:if>
+              </ul>
+            </div>
+
+            <script>
+              document.querySelector(".pagination").addEventListener("click", function (e){
+                e.preventDefault()
+                e.stopPropagation()
+
+                const target = e.target
+
+                if(target.tagName !== 'A'){
+                  return
+                }
+
+                const num = target.getAttribute("data-num")
+
+                self.location = `/todo/list?page=\${num}` // 백틱을 이용해 템플릿 처리
+              }, false);
+            </script>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row content">
-    <h1>Content</h1>
   </div>
   <div class="row footer">
     <!--    <h1>Footer</h1>-->

@@ -44,6 +44,11 @@
           </div>
           <div class="card-body">
             <form action="/todo/modify" method="post">
+
+              <%-- form에서 내용 전송시 페이지 관련 정보 같이 추가해서 전달 --%>
+              <input type="hidden" name="page" value="${pageRequestDTO.page}">
+              <input type="hidden" name="size" value="${pageRequestDTO.size}">
+
               <div class="input-group mb-3">
                 <span class="input-group-text">TNO</span>
                 <input class="form-control" type="text" name="tno"
@@ -126,8 +131,8 @@
             document.querySelector(".btn-secondary").addEventListener("click", function (e){
               e.preventDefault()
               e.stopPropagation()
-
-              self.location = "/todo/list"
+              // 경로 수정(현재 페이지 정보 유지)
+              self.location = `/todo/list?${pageRequestDTO.link}`
             }, false);
 
           </script>

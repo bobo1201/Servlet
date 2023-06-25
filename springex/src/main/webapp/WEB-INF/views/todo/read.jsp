@@ -82,11 +82,14 @@
 
             <script>
               document.querySelector(".btn-primary").addEventListener("click", function(e){
-                self.location = "/todo/modify?tno=" + ${dto.tno}
+                // modify 버튼 클릭시 현재 페이지 정보 유지하기 위해 내용 수정
+                <%--self.location = "/todo/modify?tno=" + ${dto.tno}--%>
+                self.location = `/todo/modify?tno=${dto.tno}&${pageRequestDTO.link}`
               },false)
 
               document.querySelector(".btn-secondary").addEventListener("click", function(e){
-                self.location = "/todo/list"
+                // list버튼 클릭시 link 경로 추가로 현재 페이지 정보 유지 가능
+                self.location = `/todo/list?${pageRequestDTO.link}`
               }, false)
             </script>
 

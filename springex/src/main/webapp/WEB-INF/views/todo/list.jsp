@@ -58,7 +58,12 @@
               <c:forEach items="${responseDTO.dtoList}" var="dto">
                 <tr>
                   <th scope="row"><c:out value="${dto.tno}" /></th>
-                  <td><a href="/todo/read?tno=${dto.tno}" class="text-decoration-none">
+                  <%-- 특정 번호의 ToDO를 클릭하면 지정한 링크로 이동함. controller에  pageRequestDTO가 있어서 가능--%>
+                  <%-- http://localhost:8080/todo/read?tno=890&page=1&size=10 해당 경로와 같이 이동함 --%>
+                  <%-- 상세 페이지 이동시 페이지 정보가 나타남 --%>
+                  <td><a href="/todo/read?tno=${dto.tno}&${pageRequestDTO.link}" class="text-decoration-none"
+                                                                                  data-tno="${dto.tno}">
+  <%--                  <td><a href="/todo/read?tno=${dto.tno}" class="text-decoration-none">--%>
                     <c:out value="${dto.title}" /></a> </td>
                   <td><c:out value="${dto.writer}" /> </td>
                   <td><c:out value="${dto.dueDate}" /> </td>
@@ -81,7 +86,10 @@
 
                 <%-- 첫번째 페이지일때 Previous를 출력안함 --%>
                 <c:forEach begin="${responseDTO.start}" end="${responseDTO.end}" var="num">
-                  <li class="page-item" ${responseDTO.page == num? "active":""}><a class="page-link" href="#">${num}</a></li>
+                  <%-- class 안에 ${responseDTO.page == num? "active":""} 이 내용이 있어야 active가 활성화됨 --%>
+                  <li class="page-item ${responseDTO.page == num? "active":""}">
+                    <a class="page-link" href="#">${num}</a>
+                  </li>
                 </c:forEach>
 
                 <c:if test="${responseDTO.next}">
@@ -93,18 +101,23 @@
             </div>
 
             <script>
+              // a태그를 통해서만 처리할 수 있지만 한 번에 처리하기 위해 ul태그에 script 추가
               document.querySelector(".pagination").addEventListener("click", function (e){
                 e.preventDefault()
                 e.stopPropagation()
 
                 const target = e.target
 
+                // A 태그인지 확인하는 조건식
                 if(target.tagName !== 'A'){
                   return
                 }
 
+                //추가한 data-num의 속성으로 변수 지정
                 const num = target.getAttribute("data-num")
 
+                // 백틱을 추가하며 문자열 결합시 '+' 이용하는 불편함 줄임
+                // JSP의 EL이 아니라는 것을 표시하기 위해 \${}로 처리해야함
                 self.location = `/todo/list?page=\${num}` // 백틱을 이용해 템플릿 처리
               }, false);
             </script>

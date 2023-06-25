@@ -76,7 +76,8 @@ public class TodoController {
     }
 
     @GetMapping({"/read", "/modify"})
-    public void selectOne(Model model, Long tno){
+    // PageRequestDTO를 추가로 이용하도록 수정
+    public void selectOne(Long tno, PageRequestDTO pageRequestDTO ,Model model){
 
         TodoDTO todoDTO = todoService.getOne(tno);
 
@@ -86,13 +87,17 @@ public class TodoController {
     }
 
     @PostMapping("/remove")
-    public String remove(Long tno, RedirectAttributes redirectAttributes){
+    public String remove(Long tno, PageRequestDTO pageRequestDTO, RedirectAttributes redirectAttributes){
 
         log.info("---------------remove----------------");
         log.info("tno : " + tno);
 
         todoService.remove(tno);
-
+        
+        // 삭제 처리시 무조건 1페이지로 이동하도록 지정
+        redirectAttributes.addAttribute("page", 1);
+        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
+        
         return "redirect:/todo/list";
     }
 
@@ -100,7 +105,9 @@ public class TodoController {
     // 다시 현재 페이지로 이동하면 tno 파라미터가 필요해 redirectAttributes를 이용해
     // addAttribute를 받아 tno의 값을 받음, errors라는 이름으로 BindingResult 모든 에러 전달
     @PostMapping("/modify")
-    public String modify(@Valid TodoDTO todoDTO,
+    // 수정 후 목록 이동시 페이지 정보 지정
+    public String modify(PageRequestDTO pageRequestDTO,
+                        @Valid TodoDTO todoDTO,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes){
 
@@ -115,6 +122,10 @@ public class TodoController {
         log.info(todoDTO);
 
         todoService.modify(todoDTO);
+
+        // 페이지 이동 후 해당 번호가 있는 리스트 출력
+        redirectAttributes.addAttribute("page", pageRequestDTO.getPage());
+        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
 
         return "redirect:/todo/list";
     }

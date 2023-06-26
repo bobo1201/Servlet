@@ -43,6 +43,8 @@ public class TodoMapperTests {
         voList.forEach(vo -> log.info(vo));
     }
 
+    
+    // 상세 보기 테스트
     @Test
     public void testSelectOne(){
         Long tno = 3L;
@@ -52,6 +54,7 @@ public class TodoMapperTests {
         log.info(todoVO);
     }
 
+    // 페이징 처리 테스트
     @Test
     public void testSelectList(){
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
@@ -63,5 +66,27 @@ public class TodoMapperTests {
 
         voList.forEach(vo -> log.info(vo));
     }
+    
+    
+    // 검색, 필터링 테스트(TodoMapper.xml에 내용 수정 필요)
+    // select * from tbl_todo ? ? order by tno desc limit ?, ? 쿼리문 생성
+    // 테이블 뒤 ? 두 개가 생긴 것을 확인할 수 있음
+    @Test
+    public void testSelectSearch(){
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .types(new String[]{"t", "w"})
+                .keyword("스프링")
+//                .finished(true)
+                .from(LocalDate.of(2021,12,01))
+                .to(LocalDate.of(2022,12,31))
+                .build();
 
+        List<TodoVO> voList = todoMapper.selectList(pageRequestDTO);
+
+        voList.forEach(vo -> log.info(vo));
+
+        log.info(todoMapper.getCount(pageRequestDTO));
+    }
 }

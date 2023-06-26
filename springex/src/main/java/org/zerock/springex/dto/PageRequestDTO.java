@@ -27,6 +27,18 @@ public class PageRequestDTO {
 
     // list.jsp의 Todo의 링크 처리 부분 수정하기 위해 링크 변수 생성
     private String link;
+    
+    // 필터링 및 검색을 위한 변수 추가
+    private String[] types;
+
+    private String keyword;
+
+    private boolean finished;
+
+    private LocalDate from;
+
+    private LocalDate to;
+
 
     // 변수는 따로 만들지 않았지만 todoMapper에 skip이라는 변수 사용가능(쿼리문)
     public int getSkip(){

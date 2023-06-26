@@ -29,12 +29,49 @@
         where tno = ${tno}
     </update>
 
+
+    <sql id="search">
+        <where>
+            <if test="types != null and types.length > 0">
+                <foreach collection="types" item="type" open="(" close=")" separator="OR">
+                    <if test="type == 't'.toString()">
+                        title like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        writer like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+
+            <if test="finished">
+                <trim prefix="and">
+                    finished = 1
+                </trim>
+            </if>
+
+            <if test="from != null and to != null">
+                <trim prefix="and">
+                    dueDate between #{from} and #{to}
+                </trim>
+            </if>
+        </where>
+    </sql>
+
+    <!--  색을 위한 내용 추가(foreach문) -->
+    <!--  where 키워드와 중간에 OR 또는 '()'에 대한 처리가 필요 -->
+    <!-- select * from tbl_todo ( title like concat('%', ?, '%') OR writer like concat('%', ?, '%') ) order by tno desc limit ?, ? -->
     <select id="selectList" resultType="org.zerock.springex.domain.TodoVO">
-        select * from tbl_todo order by tno desc limit #{skip}, #{size}
+        select * from tbl_todo
+
+        <include refid="search"></include>
+
+        order by tno desc limit #{skip}, #{size}
     </select>
 
+    
     <select id="getCount" resultType="int">
         select count(tno) from tbl_todo
+        <include refid="search"></include>
     </select>
 </mapper>
 

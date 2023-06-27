@@ -36,34 +36,43 @@
     <!-- header end -->
     <!-- 기존의 <h1>Header</h1> 끝 -->
 
-    <%-- 추가하는 코드 --%>
+    <%-- 추가하는 코드(검색부분) --%>
     <div class="row content">
       <div class="col">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Search</h5>
             <form action="/todo/list" method="get">
+              <%-- el태그 추가 --%>
               <input type="hidden" name="size" value="${pageRequestDTO.size}">
               <div class="mb-3">
-                <input type="checkbox" name="finished">완료여부
+                <input type="checkbox" name="finished" ${pageRequestDTO.finished?"checked":""}>완료여부
               </div>
               <div class="mb-3">
                 <%-- value 값을 지정하지 않으면 sql 에러가 나타납니다. sql에 t,w가 있기때문 --%>
-                <input type="checkbox" name="types" value="t">제목
-                <input type="checkbox" name="types" value="w">작성자
-                <input type="text" name="keyword" class="form-control">
+                <input type="checkbox" name="types" value="t" ${pageRequestDTO.checkType("t")?"checked":""}>제목
+                <input type="checkbox" name="types" value="w" ${pageRequestDTO.checkType("w")?"checked":""}>작성자
+                <input type="text" name="keyword" class="form-control" value='<c:out value="${pageRequestDTO.keyword}"/>' >
               </div>
               <div class="input-group mb-3 dueDateDiv">
-                <input type="date" name="from" class="form-control">
-                <input type="date" name="to" class="form-control">
+                <input type="date" name="from" class="form-control" value="${pageRequestDTO.from}">
+                <input type="date" name="to" class="form-control" value="${pageRequestDTO.to}">
               </div>
               <div class="input-group mb-3">
                 <div class="float-end">
                   <button class="btn btn-primary" type="submit">Search</button>
-                  <button class="btn btn-info" type="reset">Clear</button>
+                  <button class="btn btn-info clearBtn" type="reset">Clear</button>
                 </div>
               </div>
             </form>
+            <script>
+              document.querySelector(".clearBtn").addEventListener("click", function (e){
+                e.preventDefault()
+                e.stopPropagation()
+
+                self.location = '/todo/list'
+              }, false)
+            </script>
           </div>
         </div>
       </div>
@@ -123,7 +132,7 @@
                 <c:forEach begin="${responseDTO.start}" end="${responseDTO.end}" var="num">
                   <%-- class 안에 ${responseDTO.page == num? "active":""} 이 내용이 있어야 active가 활성화됨 --%>
                   <li class="page-item ${responseDTO.page == num? "active":""}">
-                    <a class="page-link" href="#">${num}</a>
+                    <a class="page-link" data-num="${num}">${num}</a>
                   </li>
                 </c:forEach>
 
@@ -151,9 +160,22 @@
                 //추가한 data-num의 속성으로 변수 지정
                 const num = target.getAttribute("data-num")
 
+                // 검색/필터링 조건이 자바스크립트로 동작하는 부분을 수정해야함
+                // 검색/필터링 부분에 name이 page인 부분만 추가해서 <form>태그를 submit으로 처리하면
+                // 검색/필터링 조건을 유지하면서 페이지 번호만 변경하는 것이 가능
+                const formObj = document.querySelector("form")
+
+                // paging 처리시 번호를 누르면 아래와 같이 검색 조건과 페이지의 조건이 경로로 나옴
+                // http://localhost:8080/todo/list?size=10&keyword=&from=&to=&page=3
+                formObj.innerHTML += `<input type='hidden' name='page' value='\${num}'>`
+
+
+                formObj.submit();
+
                 // 백틱을 추가하며 문자열 결합시 '+' 이용하는 불편함 줄임
                 // JSP의 EL이 아니라는 것을 표시하기 위해 \${}로 처리해야함
-                self.location = `/todo/list?page=\${num}` // 백틱을 이용해 템플릿 처리
+                // http://localhost:8080/todo/list?page=5
+                // self.location = `/todo/list?page=\${num}` // 백틱을 이용해 템플릿 처리
               }, false);
             </script>
           </div>

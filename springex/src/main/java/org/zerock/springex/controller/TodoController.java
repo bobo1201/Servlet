@@ -95,10 +95,10 @@ public class TodoController {
         todoService.remove(tno);
         
         // 삭제 처리시 무조건 1페이지로 이동하도록 지정
-        redirectAttributes.addAttribute("page", 1);
-        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
+//        redirectAttributes.addAttribute("page", 1);
+//        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
         
-        return "redirect:/todo/list";
+        return "redirect:/todo/list?" + pageRequestDTO.getLink();
     }
 
     // @Valid를 이용해 필요한 내용들을 검증하고 문제가 있는 경우 다시 현재 페이지로
@@ -124,9 +124,12 @@ public class TodoController {
         todoService.modify(todoDTO);
 
         // 페이지 이동 후 해당 번호가 있는 리스트 출력
-        redirectAttributes.addAttribute("page", pageRequestDTO.getPage());
-        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
+//        redirectAttributes.addAttribute("page", pageRequestDTO.getPage());
+//        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
 
-        return "redirect:/todo/list";
+        redirectAttributes.addAttribute("tno", todoDTO.getTno());
+
+//        return "redirect:/todo/list";
+        return "redirect:/todo/read";
     }
 }

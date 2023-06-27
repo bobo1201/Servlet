@@ -46,8 +46,9 @@
             <form action="/todo/modify" method="post">
 
               <%-- form에서 내용 전송시 페이지 관련 정보 같이 추가해서 전달 --%>
-              <input type="hidden" name="page" value="${pageRequestDTO.page}">
-              <input type="hidden" name="size" value="${pageRequestDTO.size}">
+              <%-- 필요 없는 내용이라 삭제 --%>
+              <%--              <input type="hidden" name="page" value="${pageRequestDTO.page}">--%>
+<%--              <input type="hidden" name="size" value="${pageRequestDTO.size}">--%>
 
               <div class="input-group mb-3">
                 <span class="input-group-text">TNO</span>
@@ -93,12 +94,12 @@
           <script>
             // 검증된 정보를 처리하는 코드를 추가, @Valid 문제가 발생했다면
             // 자바스크립트 객체로 필요할 때 사용할 수 있도록함
-            const serverValidResult = {}
-            <c:forEach items="${errors}" var="error">
-            serverValidResult['${error.getField()}'] = '${error.defaultMessage}'
-            </c:forEach>
+            <%--const serverValidResult = {}--%>
+            <%--<c:forEach items="${errors}" var="error">--%>
+            <%--serverValidResult['${error.getField()}'] = '${error.defaultMessage}'--%>
+            <%--</c:forEach>--%>
 
-            console.log(serverValidResult)
+            <%--console.log(serverValidResult)--%>
           </script>
 
           <script>
@@ -110,7 +111,8 @@
               // 이벤트 객체 'e'의 전파를 중단
               e.stopPropagation()
               // form의 action 속성을 "/todo/remove"로 경로 설정
-              formObj.action = "/todo/remove"
+              // 페이징으로 경로 수정
+              formObj.action = `/todo/remove?${pageRequestDTO.link}`
               // form의 method 속성을 "post"로 설정
               formObj.method = "post"
 

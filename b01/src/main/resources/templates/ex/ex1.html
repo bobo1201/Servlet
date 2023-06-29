@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--  <h4>[[${list}]]</h4>-->
+<!--  <hr />-->
+<!--  <h4 th:text="${list}"></h4>-->
+
+<!-- 반복문 처리 방법 두가지 th:each, <th:block> -->
+<ul>
+  <li th:each="str:${list}" th:text="${str}"></li>
+</ul>
+
+<ul>
+  <th:block th:each="str: ${list}">
+    <li>[[${str}]]</li>
+  </th:block>
+</ul>
+
+<!-- 반복문 내부 상태에 변수를 추가해서 사용할 수 있음(status) 변수
+ index/count/size/first/last/odd/even 등을 이용해 출력할 수 있음 -->
+<!-- status는 사용자가 원하는 변수로 임의로 지정 가능 -->
+<ul>
+  <li th:each="str, status:${list}">
+    [[${status.index}]] -- [[${str}]]
+  </li>
+</ul>
+
+<ul>
+  <li th:each="str, status:${list}">
+    <span th:if="${status.odd}">ODD -- [[${str}]]</span>
+    <span th:unless="${status.odd}">EVEN -- [[${str}]]</span>
+  </li>
+</ul>
+
+<ul>
+  <li th:each="str, status:${list}">
+    <span th:text="${status.odd} ? 'ODD ---' + ${str}"></span>
+  </li>
+</ul>
+
+<ul>
+  <li th:each="str, status:${list}">
+    <span th:text="${status.odd} ? 'ODD ---' + ${str} : 'EVEN ---' + ${str}"></span>
+  </li>
+</ul>
+
+<ul>
+  <li th:each="str, status:${list}">
+    <th:block th:switch="${status.index % 3}">
+      <span th:case="0">0</span>
+      <span th:case="1">1</span>
+      <span th:case="2">2</span>
+    </th:block>
+  </li>
+</ul>
+
+<!-- @로 링크 작성 -->
+<a th:href="@{/hello}">Go to /hello</a>
+
+<!-- key=value의 형태로 필요한 파라미터를 처리할 수 있음 -->
+<a th:href="@{/hello(name='AAA', age=16)}">Go to /hello</a>
+
+<!-- thymeleaf를 이용하면 URL 인코딩 처리가 자동으로 이루어짐 -->
+<a th:href="@{/hello(name='한글 처리', age=16)}">Go to /hello</a>
+
+<!-- 에러 처럼 보이지만 실제로는 동작함, types 후 괄호 안에 띄워야 실행됨 -->
+<a th:href="@{/hello(types=${ {'AA', 'BB', 'CC'} }, age=16)}">Go to /hello</a>
+
+
+</body>
+</html>

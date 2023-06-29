@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- settings → Editor → inspections → thymeleaf 검색 후 마지막 unresolved references 체크 해제
+     변수에 대한 검사를 따로 하지 않음 -->
+    <h1 th:text="${msg}"></h1>
+
+    <!--/* 주석 처리 방법 */-->
+
+    <!--/* 임시로 변수 선언하는 방법 th:with */-->
+    <div th:with="num1 = ${10}, num2 = ${20}">
+        <h4 th:text="${num1 + num2}"></h4>
+    </div>
+
+</body>
+</html>

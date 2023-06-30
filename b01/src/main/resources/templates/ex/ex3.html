@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+
+<!-- layout1.html과 똑같은 layout이 나타납니다. -->
+
+<div layout:fragment="content">
+    <h1>ex3.html</h1>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const arr = [[${arr}]]
+</script>

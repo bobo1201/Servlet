@@ -34,6 +34,10 @@ dependencies {
     // 테스트에서 lombok 사용할 수 있도록 추가
     testCompileOnly 'org.projectlombok:lombok:'
     testAnnotationProcessor 'org.projectlombok:lombok:'
+    
+    // thymeleaf의 <th:block>을 이용하면 레이아웃을 만들고 특정한 페이지에서는 필요한 부분만 작성하는 방식으로 개발 가능
+    // 레이아웃 기능을 위한 라이브러리 추가
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 }
 
 tasks.named('test') {

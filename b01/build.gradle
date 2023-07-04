@@ -54,6 +54,9 @@ dependencies {
         "javax.persistence:javax.persistence-api",
         "javax.annotation:javax.annotation-api",
         "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+
+    // ModelMapper 이용
+    implementation 'org.modelmapper:modelmapper:3.1.0'
 }
 
 tasks.named('test') {

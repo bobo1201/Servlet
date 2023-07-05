@@ -64,7 +64,7 @@ public class PageRequestDTO {
                 }
             }
             // builder에 string 경로를 붙여줌
-            link = builder().toString();
+            link = builder.toString();
         }
         return link;
     }

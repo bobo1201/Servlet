@@ -57,6 +57,12 @@ dependencies {
 
     // ModelMapper 이용
     implementation 'org.modelmapper:modelmapper:3.1.0'
+
+    // 타임리프 레이아웃 관련 라이브러리 추가
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+
+    // @Valid 이용
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

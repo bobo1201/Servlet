@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<!-- basic.html과 똑같은 layout이 나타납니다. -->
+<head>
+  <title>Board Modify</title>
+</head>
+
+<!-- 레이아웃용 -->
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Board Modify
+        </div>
+        <div class="card-body">
+          <form th:action="@{/board/modify}" method="post" id="f1">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Bno</span>
+              <input type="text" class="form-control" th:value="${dto.bno}" name="bno" readonly>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Title</span>
+              <input type="text" class="form-control" th:value="${dto.title}" name="title">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Content</span>
+              <textarea class="form-control col-sm-5" rows="5" name="content">[[${dto.content}]]</textarea>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Writer</span>
+              <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">RegDate</span>
+              <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">ModDate</span>
+              <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+            </div>
+            <!-- a 태그를 이용해 PageRequestDTO의 getLink() 활용 -->
+            <!-- th:with를 이용해 변수로 미리 선언하고 필요할 때마다 재사용 -->
+            <div class="my-4">
+              <div class="float-end">
+                <button type="button" class="btn btn-primary listBtn">List</button>
+                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+              </div>
+            </div>
+          </form>
+
+        </div> <!-- end card body -->
+      </div> <!-- end card -->
+    </div> <!-- end col -->
+  </div> <!-- end row -->
+</div> <!-- end layout fragment -->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const errors = [[${errors}]]
+  console.log(errors)
+
+  let errorMsg = ''
+
+  if(errors){
+    for(let i=0; i<errors.length; i++){
+      errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+    }
+    // url을 변경하고 페이지를 다시로드하지 않는 방식으로 브라우저의 히스토리에 새로운 상태 추가
+    // history.replaceState(state, title, url)
+    // state : 변경된 url에 연결된 상태 객체, 페이지 상태를 나타내는 정보를 포함
+    // title : 변경된 URL의 타이틀(보통 NULL로 설정)
+    // url : 변경된 URL, null이면 현재 url을 그대로 사용
+    // 주로 AJAX를 사용하여 페이지의 일부분을 동적으로 업데이트하거나, 뒤로 가기/앞으로 가기 버튼을 클릭했을 때 페이지를 다시 로드하지 않고 상태를 업데이트하는 등의 경우에 사용
+    // history : 최근에 방문한 url
+    history.replaceState({}, null, null)
+    alert(errorMsg)
+  }
+
+  const link = [[${pageRequestDTO.getLink()}]]
+  const formObj = document.querySelector("#f1")
+
+  document.querySelector(".modBtn").addEventListener("click", function (e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    formObj.action = `/board/modify?${link}`
+    formObj.method = 'post'
+    formObj.submit()
+
+  }, false)
+
+  document.querySelector(".removeBtn").addEventListener("click", function (e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    formObj.action = `/board/remove`
+    formObj.method = 'post'
+    formObj.submit()
+  }, false)
+
+  document.querySelector(".listBtn").addEventListener("click", function (e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    formObj.reset();
+    self.location = `/board/list?${link}`
+  }, false)
+
+
+
+
+
+</script>

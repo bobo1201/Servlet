@@ -29,7 +29,7 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
 
-       //  PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//         PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
 
         PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
 

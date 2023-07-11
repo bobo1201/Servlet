@@ -32,6 +32,8 @@ public class Board extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String writer;
 
+    
+    // Board에서 BoardImage에 대한 참조를 가지는 방식으로 구조 작성
     // 양방향 : bidirectiona
     // Board 엔티티 모든 상태 변화에 BoardImage 객체들 역시 같이 변경됨
     // Board에서 BoardImage 객체들을 모두 관리

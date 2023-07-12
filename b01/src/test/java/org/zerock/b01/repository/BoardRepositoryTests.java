@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.domain.BoardImage;
+import org.zerock.b01.dto.BoardListAllDTO;
 import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import javax.transaction.Transactional;
@@ -160,6 +161,7 @@ public class BoardRepositoryTests {
         result.getContent().forEach(board -> log.info(board));
     }
 
+
     // 게시물 하나에 3개의 첨부파일 추가하는경우를 가정
     // 영속성 전이가 일어나므로 board 테이블에 1번, board_image 테이블에 3번 insert가 일어남
     @Test
@@ -274,4 +276,18 @@ public class BoardRepositoryTests {
         boardRepository.searchWithAll(null, null, pageable);
     }
 
+    @Transactional
+    @Test
+    public void testSearchImageReplyCount1(){
+        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+
+        // boardRepository.searchWithAll(null, null, pageable);
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(null, null, pageable);
+
+        log.info("--------------------------");
+        log.info(result.getTotalElements());
+
+        result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
+    }
 }

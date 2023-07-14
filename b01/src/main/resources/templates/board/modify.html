@@ -134,27 +134,59 @@
     alert(errorMsg)
   }
 
-  const link = [[${pageRequestDTO.getLink()}]]
-  const formObj = document.querySelector("#f1")
+  const link = [[${pageRequestDTO.getLink()}]];
+  const formObj = document.querySelector("#f1");
+
 
   document.querySelector(".modBtn").addEventListener("click", function (e){
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-    formObj.action = `/board/modify?${link}`
-    formObj.method = 'post'
-    formObj.submit()
+    formObj.action = `/board/modify?${link}`;
 
+    // 첨부파일을 <input type='hidden...>으로 추가
+    appendFileData();
+
+    // 삭제대상 파일들의 삭제
+    callRemoveFiles();
+
+    formObj.method = 'post';
+    formObj.submit();
   }, false)
 
-  document.querySelector(".removeBtn").addEventListener("click", function (e){
-    e.preventDefault()
-    e.stopPropagation()
+  function appendFileData(){
+    const target = document.querySelector(".uploadHidden");
+    const uploadFiles = uploadResult.querySelectorAll("img");
 
-    formObj.action = `/board/remove`
-    formObj.method = 'post'
-    formObj.submit()
-  }, false)
+    let str = '';
+
+    for(let i=0; i<uploadFiles.length; i++){
+      const uploadFile = uploadFiles[i];
+      const imgLink = uploadFile.getAttribute("data-src");
+
+      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+    }
+
+    target.innerHTML = str;
+  }
+
+  function callRemoveFiles(){
+    console.log(removeFileList);
+    removeFileList.forEach(({uuid, fileName}) => {
+      console.log(`${uuid}_${fileName}`);
+      removeFileToServer({uuid, fileName});
+    });
+  }
+
+
+  // document.querySelector(".removeBtn").addEventListener("click", function (e){
+  //   e.preventDefault()
+  //   e.stopPropagation()
+  //
+  //   formObj.action = `/board/remove`
+  //   formObj.method = 'post'
+  //   formObj.submit()
+  // }, false)
 
   document.querySelector(".listBtn").addEventListener("click", function (e){
     e.preventDefault()
@@ -163,6 +195,7 @@
     formObj.reset();
     self.location = `/board/list?${link}`
   }, false)
+
 
   // 최종적으로 삭제될 파일들의 목록
   const removeFileList = [];
@@ -178,6 +211,7 @@
     console.log(obj);
 
     removeFileList.push({uuid, fileName});
+
 
     // closest는 obj를 포함하여 obj의 부모, 조상 요소들을 탐색하며 가장 가까운 요소 찾음
     // 이벤트 처리 시에 특정 요소를 찾거나 조작하기 위해 사용
@@ -237,44 +271,6 @@
     uploadResult.innerHTML += str;
   }
 
-  document.querySelector(".modBtn").addEventListener("click", function (e){
-    e.preventDefault();
-    e.stopPropagation();
-
-    formObj.action = `/board/modify?${link}`;
-
-    // 첨부파일을 <input type='hidden...>으로 추가
-    appendFileData();
-
-    // 삭제대상 파일들의 삭제
-    callRemoveFiles();
-
-    formObj.method = 'post';
-    formObj.submit();
-  }, false)
-
-  function appendFileData(){
-    const target = document.querySelector(".uploadHidden");
-    const uploadFiles = uploadResult.querySelectorAll("img");
-
-    let str = '';
-
-    for(let i=0; i<uploadFiles.length; i++){
-      const uploadFile = uploadFiles[i];
-      const imgLink = uploadFile.getAttribute("data-src");
-
-      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
-    }
-
-    target.innerHTML = str;
-  }
-
-  function callRemoveFiles(){
-    removeFileList.forEach(({uuid, fileName}) => {
-      removeFileToServer({uuid, fileName});
-    });
-  }
-
 
   document.querySelector(".removeBtn").addEventListener("click", function (e){
     e.preventDefault();
@@ -288,7 +284,7 @@
 
     formObj.action = `/board/remove`;
     formObj.method = 'post';
-    // formObj.submit(); // 테스트 이후 주석 해제
+    formObj.submit(); // 테스트 이후 주석 해제
   }, false)
 
   function appendNotShownData(){

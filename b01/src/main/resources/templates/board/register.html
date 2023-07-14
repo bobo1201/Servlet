@@ -159,7 +159,7 @@
 
     // 서버에서 삭제하고 현재 섬네일을 감싸는 card를 찾아 화면에서 삭제
     // 실제 저장된 파일도 같이 삭제
-    removeFileToServer(uuid, fileName).then(data =>{
+    removeFileToServer({uuid, fileName}).then(data =>{
       targetDiv.remove();
     });
   }

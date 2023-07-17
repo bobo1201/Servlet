@@ -71,6 +71,8 @@ dependencies {
     // 파일 용량 줄이기 위해 사용
     implementation 'net.coobird:thumbnailator:0.4.16'
 
+    // 스프링 시큐리티 관련 설정 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {

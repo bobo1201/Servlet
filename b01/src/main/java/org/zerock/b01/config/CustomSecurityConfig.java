@@ -26,6 +26,10 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
         log.info("--------------------configure--------------------");
+        
+        // username이라는 사용자의 아이디 인증을 코드로 구현
+        // 로그인 화면에서 로그인을 진행한다는 설정 추가
+        http.formLogin();
 
         return http.build();
     }

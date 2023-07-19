@@ -2,6 +2,7 @@ package org.zerock.b01.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,14 @@ public class CustomUserDetailService implements UserDetailsService {
 
         log.info("loadUserByUsername: " + username);
 
-        return null;
+        // 사용자 인증과 관련된 정보들을 저장하는 역할
+        // 패스워드 인증아 안되서 실패함
+        UserDetails userDetails = User.builder()
+                .username("user1")
+                .password("1111")
+                .authorities("ROLE_USER")
+                .build();
+
+        return userDetails;
     }
 }

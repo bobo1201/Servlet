@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
 
@@ -17,8 +19,13 @@ import org.springframework.security.web.WebAttributes;
 // Using generated security password: 74b854ce-6695-437a-b0d9-8c2b6f59b873
 // url 경로 : http://localhost:8082/login
 @Configuration
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class CustomSecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     // 해당 설정 때문에 바로 board/list 경로로 접근할 수 있음
     // 메소드 설정으로 모든 사용자가 모든 경로에 접근할 수 있음
@@ -43,5 +50,4 @@ public class CustomSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 
     }
-
 }

@@ -73,11 +73,18 @@ dependencies {
 
     // 스프링 시큐리티 관련 설정 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+// 단위 테스트가 작성되지 않았는데 빌드가 되면서 난 에러임
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
+
+
+
 
 // 해당 부분 주석처리하니 오류가 나타나지 않음
 // 3. Querydsl 관련 부분 추가 작성

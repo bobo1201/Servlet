@@ -76,7 +76,7 @@ public class BoardController {
     }
 
     // 로그인한 사용자만 조회할 수 있도록 수정
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
@@ -87,6 +87,9 @@ public class BoardController {
         model.addAttribute("dto", boardDTO);
     }
 
+    // username이 boardDTO.writer와 같은지 비교
+    // 강제로 http://localhost:8082/board/modify?bno=100 경로로 지정한 후 modify를 시행하면 403에러가 나타남(접근 제한)
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,

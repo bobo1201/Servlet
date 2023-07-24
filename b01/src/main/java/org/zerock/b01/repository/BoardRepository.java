@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.repository.search.BoardSearch;
 
@@ -27,6 +28,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch
     // 지연 로딩이라도 한 번에 조인해서 select가 이루어지도록 하는 방법
     @EntityGraph(attributePaths = {"imageSet"})
     @Query("select b from Board b where b.bno = :bno")
-    Optional<Board> findByIdWithImages(Long bno);
+    // 책에는 java 8버전이라 @Param을 안넣어도 되지만 이 프로젝트는 java11(java8+)이므로 @Param(bno)를 지정해야함
+    Optional<Board> findByIdWithImages(@Param("bno") Long bno);
 
 }

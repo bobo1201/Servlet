@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
 
@@ -44,16 +45,34 @@
           </div>
           <!-- a 태그를 이용해 PageRequestDTO의 getLink() 활용 -->
           <!-- th:with를 이용해 변수로 미리 선언하고 필요할 때마다 재사용 -->
+          <!-- th:with를 이용해 user 변수 선언 -->
+<!--          <div class="my-4" th:with="user=${#authentication.principal}">-->
+<!--            <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">-->
+<!--              <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">-->
+<!--                <button type="button" class="btn btn-primary">List</button>-->
+<!--              </a>-->
+<!--              &lt;!&ndash; user 정보가 없을 경우 나타나지 않게 함 &ndash;&gt;-->
+<!--              &lt;!&ndash; 현재 로그인한 사용자가 동일할 경우에만 아래의 버튼 나타남 &ndash;&gt;-->
+<!--              <a th:if="${user != null && user.username == dto.writer}"-->
+<!--                      th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">-->
+<!--                <button type="button" class="btn btn-secondary">Modify</button>-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
+
           <div class="my-4">
             <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">
               <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
+              <!-- user 정보가 없을 경우 나타나지 않게 함 -->
+              <!-- 현재 로그인한 사용자가 동일할 경우에만 아래의 버튼 나타남 -->
               <a th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
                 <button type="button" class="btn btn-secondary">Modify</button>
               </a>
             </div>
           </div>
+
         </div> <!-- end card body -->
 
         <div class="col">
@@ -93,14 +112,26 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"
                   aria-label="Close"></button>
         </div>
+<!--        <div class="modal-body">-->
+<!--          <div class="input-group mb-3">-->
+<!--            <span class="input-group-text">Reply Text</span>-->
+<!--            <input type="text" class="form-control replyText">-->
+<!--          </div>-->
+<!--          &lt;!&ndash; 댓글 추가시 댓글의 작성자가 현재 로그인한 사용자가 되도록 고정해야함 &ndash;&gt;-->
+<!--          <div class="input-group mb-3" th:with="user=${#authentication.principal}">-->
+<!--            <span class="input-group-text">Replyer</span>-->
+<!--            <input type="text" class="form-control replyer" th:value="${user.username}" readonly>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">Reply Text</span>
             <input type="text" class="form-control replyText">
           </div>
+          <!-- 댓글 추가시 댓글의 작성자가 현재 로그인한 사용자가 되도록 고정해야함 -->
           <div class="input-group mb-3">
             <span class="input-group-text">Replyer</span>
-            <input type="text" class="form-control replyer">
+            <input type="text" class="form-control replyer" readonly>
           </div>
         </div>
         <div class="modal-footer">
@@ -142,6 +173,10 @@
 </div> <!-- end layout fragment -->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  // 로그인한 사용자의 정보를 활용해 자신이 작성한 댓글만 수정/삭제가 가능하도록 조정
+  // 자바스크립트에 현재 로그인한 사용자의 아이디를 변수로 지정
+  // const currentUser = [[${#authentication.principal.username}]];
 
   const bno = [[${dto.bno}]]
 
@@ -269,21 +304,26 @@
 
   const replyHeader = document.querySelector(".replyHeader")
   const modifyText = document.querySelector(".modifyText")
+
+
   const modifyBtn = document.querySelector(".modifyBtn")
   const removeBtn = document.querySelector(".removeBtn")
   const closeModifyBtn = document.querySelector(".closeModifyBtn")
 
-  replyList.addEventListener("click", function (e){
-    e.preventDefault()
-    e.stopPropagation()
+  // let hasAuth = false; // 댓글의 작성자와 currentUser의 일치 여부
 
-    const target = e.target
+  // 댓글의 수정/삭제는 Ajax로 댓글을 가져온 후 이루어지므로 이때 댓글의 작성자(이하 replyer)와 currentUser가 일치하는지 확인해서 수정/삭제 제어
+  replyList.addEventListener("click", function (e){
+    e.preventDefault();
+    e.stopPropagation();
+
+    const target = e.target;
 
     if(!target || target.tagName != 'SPAN'){
-      return
+      return;
     }
 
-    const rno = target.getAttribute("data-rno")
+    const rno = target.getAttribute("data-rno");
 
     if(!rno){
       return;
@@ -291,15 +331,24 @@
 
     getReply(rno).then(reply => { // 댓글의 내용을 모달창에 채워서 보여줌
 
-      console.log(reply)
-      replyHeader.innerHTML = reply.rno
-      modifyText.value = reply.replyText
-      modifyModal.show()
+      console.log(reply);
+      replyHeader.innerHTML = reply.rno;
+      modifyText.value = reply.replyText;
+      modifyModal.show();
+
+      // hasAuth = currentUser === reply.replyer; // 댓글의 작성자와 현재 사용자 일치 여부 확인
 
     }).catch(e => alert('error'))
   }, false)
 
   modifyBtn.addEventListener("click", function (e){
+
+    // if(!hasAuth){
+    //   alert("댓글 작성자만 수정이 가능합니다.");
+    //   modifyModal.hide();
+    //   return;
+    // }
+
     const replyObj = {
       bno:bno,
       rno:replyHeader.innerHTML,
@@ -321,6 +370,13 @@
   }, false)
 
   removeBtn.addEventListener("click", function (e){
+
+    // if(!hasAuth){
+    //   alert("댓글 작성자만 삭제가 가능합니다.");
+    //   modifyModal.hide();
+    //   return;
+    // }
+
     removeReply(replyHeader.innerHTML).then(result =>{
       alert(result.rno + ' 댓글이 삭제되었습니다.')
       replyText.value = ''

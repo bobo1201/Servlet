@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
+<!-- thymeleaf에 springsecurity5 추가 -->
+
 
 <!-- basic.html과 똑같은 layout이 나타납니다. -->
 <head>
@@ -28,7 +31,10 @@
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">Writer</span>
-              <input type="text" name="writer" class="form-control" placeholder="Writer" >
+              <input type="text" name="writer" class="form-control" placeholder="Writer"
+                      th:value="${#authentication.principal.username}" readonly>
+              <!-- 작성자 부분에는 현재 사용자 아이디(스프링 시큐리티에서는 username)을 출력하고 읽기전용으로 처리 -->
+              <!-- 화면에 값으로 로그인한 사용자 정보 username 이 나타남 -->
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">Images</span>
@@ -87,6 +93,10 @@
 </div> <!-- layout fragment end -->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  // 경로 호출시 인증 정보 생성
+  const auth = [[${#authentication}]];
+
   const errors = [[${errors}]]
   console.log(errors)
 

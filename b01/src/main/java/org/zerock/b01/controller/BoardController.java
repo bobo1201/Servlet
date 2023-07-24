@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,9 +48,11 @@ public class BoardController {
         model.addAttribute("responseDTO", responseDTO);
     }
 
+    // config에서 설정했던 것을 통해 권한 지정
+    // 해당 페이지는 user/1111 로그인을 해야만 접근 가능
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
     public void registerGET(){
-
     }
 
     @PostMapping("/register")
@@ -72,6 +75,8 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    // 로그인한 사용자만 조회할 수 있도록 수정
+//    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 

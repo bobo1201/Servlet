@@ -12,9 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.b01.security.CustomUserDetailService;
+import org.zerock.b01.security.handler.Custom403Handler;
 
 import javax.sql.DataSource;
 
@@ -45,7 +47,7 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-        log.info("--------------------configure--------------------");
+        log.info("------------------configure------------------");
 
         // 커스텀 로그인 페이지
         // username이라는 사용자의 아이디 인증을 코드로 구현
@@ -57,13 +59,23 @@ public class CustomSecurityConfig {
         http.csrf().disable();
         
         // 쿠키 값을 인코딩 하기 위한 key값과 필요한 정보 저장하는 tokenRepository 지정
+        // 30일동안 쿠키 유지
         http.rememberMe()
                 .key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailService)
                 .tokenValiditySeconds(60*60*24*30);
 
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+
         return http.build();
+    }
+
+    // 403 메시지가 화면에 출력되는 대신 로그인 페이지로 이동하고 'error=ACCESS_DENIED'와 같은 파라미터가 전달됨
+    // error 파라미터의 값을 이용해 로그인 화면에 좀 더 자세한 메시지 처리 작업 가능
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new Custom403Handler();
     }
 
     // 정적 자원(css, js 파일 등에 필터가 적용됨)

@@ -120,6 +120,8 @@ public class BoardController {
 
     }
 
+    // 작성자가 같은지 비교
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/remove")
     // bno만 했던 것을 BoardDTO 파라미터로 변경
 //    public String remove(Long bno, RedirectAttributes redirectAttributes){

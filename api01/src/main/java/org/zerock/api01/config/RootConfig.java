@@ -1,5 +1,6 @@
 package org.zerock.api01.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 // 해당 클래스가 스프링의 설정 클래스임을 명시하고 스프링의 빈으로 설정
 @Configuration
+@Log4j2
 public class RootConfig {
     
     @Bean

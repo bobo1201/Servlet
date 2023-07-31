@@ -9,6 +9,18 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
   // 나중에 Ajax 호출
+  async function callTest(){
+      const response = await axios.get("http://localhost:8083/api/sample/doA");
+      return response.data;
+  }
+
+  // http://localhost:8083/files/sample.html 경로를 호출하면 console.log를 통해 브라우저에 배열 출력되는 것을 볼 수 있음
+  // ['AAA', 'BBB', 'CCC']
+  callTest()
+      .then(data => console.log(data))
+      .catch(e => console.log(e));
+
 </script>
+
 </body>
 </html>

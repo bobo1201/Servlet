@@ -2,9 +2,11 @@ package org.zerock.api01.security.filter;
 
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +41,13 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
         
         log.info(jsonData);
 
-        return null;
+        // Map으로 처리된 mid, mpw를 이용해 로그인 처리하는 부분에 토큰 인증 정보 만듬(//789p)
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(
+                jsonData.get("mid"),
+                jsonData.get("mpw"));
+
+        return getAuthenticationManager().authenticate(authenticationToken);
     }
 
 

@@ -45,6 +45,9 @@ dependencies {
 
     // Gson 라이브러리 추가
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    // JWT 라이브러리 추가
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
 tasks.named('test') {

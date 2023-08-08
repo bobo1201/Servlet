@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.zerock.api01.security.APIUserDetailsService;
 import org.zerock.api01.security.filter.APILoginFilter;
 import org.zerock.api01.security.handler.APILoginSuccessHandler;
+import org.zerock.api01.util.JWTUtil;
 
 
 // 1. CSRF 토큰의 비활성화, 2. 세션을 사용하지 않음
@@ -40,6 +41,8 @@ public class CustomSecurityConfig {
     // 로그인 처리 담당 필터(AbstractAuthenticationProcessingFilter) 로그인 처리 담당하므로 객체 설정 위해 주입
     // 주입
     private final APIUserDetailsService apiUserDetailsService;
+    
+    private final JWTUtil jwtUtil;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -61,6 +64,8 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception{
 
+        log.info("------------------configure------------------");
+
         // AuthenticationManager 설정
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
@@ -81,8 +86,8 @@ public class CustomSecurityConfig {
         
         // 추가한 Handler 부분을 작성
         
-        // APILoginSuccessHandler
-        APILoginSuccessHandler successHandler = new APILoginSuccessHandler();
+        // APILoginSuccessHandler, jwtUtil 주입
+        APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
         // SuccessHandler 세팅
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
         
